@@ -34,7 +34,7 @@ except ImportError as e:
 
 script_name = "unmatched_assets"
 
-def match_assets(assets_dict, media_dict, ignore_root_folders, has_file):
+def match_assets(assets_dict, media_dict, ignore_root_folders, is_missing):
     """
     Matches assets to media and returns a dictionary of unmatched assets.
     
@@ -65,8 +65,8 @@ def match_assets(assets_dict, media_dict, ignore_root_folders, has_file):
                     skipped.append(f"{media_data['title']} ({media_data['year']})")
                     continue
 
-                # If has_file is True skip media that does not have a file
-                if has_file and not media_data['has_file']:
+                # If is_missing is True skip media that does not have a file
+                if is_missing and not media_data['has_file']:
                     skipped.append(f"{media_data['title']} ({media_data['year']})")
                     continue
                 
@@ -252,7 +252,7 @@ def main(config):
         ignore_collections = script_config.get('ignore_collections', [])
         instances = script_config.get('instances', None)
         ignore_root_folders = script_config.get('ignore_root_folders', [])
-        has_file = script_config.get('has_file', False)
+        is_missing = script_config.get('is_missing', False)
         valid = validate(config, script_config, logger)
 
         # Logging script settings
@@ -266,7 +266,7 @@ def main(config):
         logger.debug(f'{"Ignore collections:":<20}{ignore_collections}')
         logger.debug(f'{"Instances:":<20}{instances}')
         logger.debug(f'{"Ignore root folders:":<20}{ignore_root_folders}')
-        logger.debug(f'{"Has file:":<20}{has_file}')
+        logger.debug(f'{"Has file:":<20}{is_missing}')
         logger.debug(create_bar("-"))
 
         source_dirs = [source_dirs] if isinstance(source_dirs, str) else source_dirs 
@@ -351,7 +351,7 @@ def main(config):
         else:
             logger.debug(f"Media:\n{json.dumps(media_dict, indent=4)}")
         # Matching assets and printing output
-        unmatched_dict, skipped = match_assets(assets_dict, media_dict, ignore_root_folders, has_file)
+        unmatched_dict, skipped = match_assets(assets_dict, media_dict, ignore_root_folders, is_missing)
         if skipped:
             logger.debug("The following media have been skipped:")
             for item in skipped:
