@@ -259,6 +259,9 @@ unmatched_assets:
   # not have a seasonal poster then it will not match the series poster. If you don't have a season poster
   # your series will appear in the movies section.
   log_level: info
+  # Set to True if you only want unmatched_assets to check for assets that have a file
+  # Set to False if you want all assets to be checked
+  is_missing: false
   instances:
     - plex_1
     - radarr_1
