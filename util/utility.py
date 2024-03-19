@@ -571,6 +571,7 @@ def handle_starr_data(app, server_name, instance_type, include_episode=False):
                         'season_pack': season['statistics']['episodeCount'] == season['statistics']['totalEpisodeCount'],
                         'season_has_episodes': season['statistics']['episodeCount'] > 0,
                         'episode_data': episode_list if include_episode else [],
+                        'has_files': any(episode['has_file'] for episode in episode_list) if include_episode else None,
                     })  # Append season data to the season dictionary
             
             alternate_titles = []
@@ -604,7 +605,7 @@ def handle_starr_data(app, server_name, instance_type, include_episode=False):
                 'normalized_alternate_titles': normalized_alternate_titles,
                 'file_id': file_id if instance_type == "radarr" else None,
                 'folder': os.path.basename(os.path.normpath(item['path'])),
-                'has_file': item['hasFile'] if instance_type == "radarr" else None,
+                'has_file': item['hasFile'] if instance_type == "radarr" else any(season['has_files'] for season in season_list) if instance_type == "sonarr" else None,
                 'tags': item['tags'],
                 'seasons': season_list if instance_type == "sonarr" else None,  # Add season_list for Sonarr items
                 'season_numbers': [season['season_number'] for season in season_list] if instance_type == "sonarr" else None,
